@@ -1,0 +1,13 @@
+# Created by .ignore support plugin (hsz.mobi)
+.idea/dataSources.local.xml
+.idea/inspectionProfiles/
+.idea/workspace.xml
+__pycache__/
+app/__pycache__/
+app/cms/__pycache__/
+app/common/__pycache__/
+app/front/__pycache__/
+migrations/__pycache__/
+migrations/versions/__pycache__/
+utils/__pycache__/
+utils/captcha/__pycache__/
