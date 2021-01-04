@@ -20,8 +20,8 @@ class ResetpwdForm(BaseForm):
 
 
 class ResetEmailForm(BaseForm):
-    email = StringField(validators=[Email(message='请输入正确格式的邮箱！')])
-    captcha = StringField(validators=[Length(6, 6, message='验证码长度为6位')])
+    email = StringField(validators=[InputRequired(message='请输入邮箱'), Email(message='请输入正确格式的邮箱！')])
+    captcha = StringField(validators=[InputRequired(message='请输入验证码'), Length(6, 6, message='验证码长度为6位')])
 
     def validate_captcha(self, field):
         captcha = field.data
@@ -35,6 +35,29 @@ class ResetEmailForm(BaseForm):
         user = g.cms_user
         if user.email == email:
             raise ValidationError('不能修改为相同的邮箱！')
+
+
+class AddBannerForm(BaseForm):
+    name = StringField(validators=[InputRequired(message='请输入轮播图名称')])
+    image_url = StringField(validators=[InputRequired(message='请选择轮播图')])
+    link_url = StringField(validators=[InputRequired(message='请输入轮播图链接')])
+    priority = IntegerField(validators=[InputRequired(message='请输入轮播图名称')])
+
+
+class UpdateBannerForm(AddBannerForm):
+    banner_id = IntegerField(validators=[InputRequired(message='缺少参数，没有传递轮播图id')])
+
+
+class AddBoardForm(BaseForm):
+    name = StringField(validators=[InputRequired(message='请输入板块名称')])
+
+
+class UpdateBoardForm(AddBoardForm):
+    board_id = IntegerField(validators=[InputRequired(message='缺少板块ID')])
+
+
+class DeleteBoardForm(BaseForm):
+    board_id = IntegerField(validators=[InputRequired(message='缺少板块ID')])
 
 
 

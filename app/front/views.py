@@ -1,18 +1,50 @@
 # -- coding: utf-8 --
 
 from flask import Blueprint, views, render_template, make_response, request, session, url_for
-from .forms import SignupForm, SigninForm
+from .forms import SignupForm, SigninForm, AddPostForm
 from utils import restful, safeutils
 from .models import FrontUser
+from ..models import BannerModel, BoardModel, PostModel
 from exts import db
 import config
+from .decorators import login_required
 
 front_bp = Blueprint('front', __name__)
 
 
 @front_bp.route('/')
 def index():
-    return render_template('front/front_index.html')
+    banners = BannerModel.query.order_by(BannerModel.priority.desc()).limit(4)
+    boards = BoardModel.query.all()
+    context = {
+        'banners': banners,
+        'boards': boards
+    }
+    return render_template('front/front_index.html', **context)
+
+
+@front_bp.route('/apost/', methods=['GET', 'POST'])
+@login_required
+def apost():
+    if request.method == 'GET':
+        return render_template('front/front_apost.html')
+    else:
+        form = AddPostForm(request.form)
+        if form.validate():
+            title = form.title.data
+            content = form.content.data
+            board_id = form.board_id.data
+            board = BoardModel.query.get(board_id)
+
+            if not board:
+                return restful.params_error(message='没有这个板块')
+
+            post = PostModel(title=title, content=content, board_id=board_id)
+            db.session.add(post)
+            db.session.commit()
+            return restful.success()
+        else:
+            return restful.params_error(message=form.get_error())
 
 
 class SignupView(views.MethodView):

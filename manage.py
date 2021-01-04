@@ -6,6 +6,7 @@ from bbs import create_app
 from exts import db
 from app.cms import models as cms_models
 from app.front import models as front_models
+from app.models import BannerModel, BoardModel, PostModel
 
 CMSUser = cms_models.CMSUser
 CMSRole = cms_models.CMSRole
